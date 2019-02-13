@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">MyFFCS</string>
+    <string name="welcome_to_ffcs">myFFCS</string>
+    <string name="manage_timetable_title_desc">The best way to manage your timetable</string>
+
+    <array name="segment_elements">
+        <item>Sign up</item>
+        <item>Login</item>
+    </array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
