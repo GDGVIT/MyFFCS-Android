@@ -29,7 +29,7 @@ import androidx.fragment.app.Fragment;
  */
 public class SignUpFragment extends Fragment {
     private static final String TAG = "SignUpFragment";
-    FirebaseAuth firebaseAuth;
+    private FirebaseAuth firebaseAuth;
 
 
     public SignUpFragment() {
@@ -56,6 +56,7 @@ public class SignUpFragment extends Fragment {
         Button registerButton = view.findViewById(R.id.register_button);
         Button skipButton = view.findViewById(R.id.skip_register_button);
 
+        // set listeners
         registerButton.setOnClickListener(l -> {
             if (Objects.requireNonNull(emailEditText.getText()).toString().isEmpty()) {
                 emailEditText.setError("Email must not be empty!");
