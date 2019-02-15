@@ -6,4 +6,6 @@
     <color name="blue_a200">#3389F7</color>
     <color name="blue_700">#3389F7</color>
     <color name="blue_text_desc">#64A5F8</color>
+    <color name="cardview_bg_grey">#F5F7FB</color>
+    <color name="textview_grey">#BABAC4</color>
 </resources>
