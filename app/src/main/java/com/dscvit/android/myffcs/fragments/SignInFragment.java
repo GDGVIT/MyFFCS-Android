@@ -27,6 +27,7 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -74,6 +75,8 @@ public class SignInFragment extends Fragment {
         // get refs to views
         TextInputEditText emailEditText = view.findViewById(R.id.login_email_edittext);
         TextInputEditText passwordEditText = view.findViewById(R.id.login_password_edittext);
+        TextInputLayout emailTIL = view.findViewById(R.id.login_email_TIL);
+        TextInputLayout passwordTIL = view.findViewById(R.id.login_password_TIL);
         Button loginButton = view.findViewById(R.id.login_button);
         Button googleButton = view.findViewById(R.id.google_signin_button);
         Button facebookProxyButton = view.findViewById(R.id.facebook_signin_button_proxy);
@@ -99,18 +102,16 @@ public class SignInFragment extends Fragment {
                 Log.w(TAG, "onError: ", error);
             }
         });
-        facebookProxyButton.setOnClickListener(l -> {
-            facebookButton.performClick();
-        });
+        facebookProxyButton.setOnClickListener(l -> facebookButton.performClick());
 
         // set listeners
         loginButton.setOnClickListener(l -> {
             if (Objects.requireNonNull(emailEditText.getText()).toString().isEmpty()) {
-                emailEditText.setError("Email must not be empty!");
+                emailTIL.setError("Email must not be empty!");
             } else if (Objects.requireNonNull(passwordEditText.getText()).toString().isEmpty()) {
-                passwordEditText.setError("Password must not be empty!");
+                passwordTIL.setError("Password must not be empty!");
             } else if (passwordEditText.getText().toString().length() < 8) {
-                passwordEditText.setError("Password length must be greater than 8 characters!");
+                passwordTIL.setError("Password length must be greater than 8 characters!");
             } else {
                 firebaseAuth.signInWithEmailAndPassword(emailEditText.getText().toString(), passwordEditText.getText().toString())
                         .addOnCompleteListener(requireActivity(), task -> {
@@ -130,6 +131,7 @@ public class SignInFragment extends Fragment {
         });
         skipLoginButton.setOnClickListener(l -> {
             startActivity(new Intent(requireContext(), MainActivity.class));
+            requireActivity().finish();
         });
 
     }
@@ -138,7 +140,7 @@ public class SignInFragment extends Fragment {
         if (currentUser != null) {
             Context context = requireContext();
             context.startActivity(new Intent(context, MainActivity.class));
-            Log.d(TAG, "updateUI: Starting MainActivity");
+            requireActivity().finish();
         }
     }
 

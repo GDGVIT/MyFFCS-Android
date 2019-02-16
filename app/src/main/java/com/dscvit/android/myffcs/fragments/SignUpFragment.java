@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.dscvit.android.myffcs.MainActivity;
 import com.dscvit.android.myffcs.R;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,22 +49,24 @@ public class SignUpFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        //updateUI(currentUser);
+        updateUI(currentUser);
 
         // get refs to views
         TextInputEditText emailEditText = view.findViewById(R.id.signup_email_edittext);
         TextInputEditText passwordEditText = view.findViewById(R.id.signup_password_edittext);
+        TextInputLayout emailTIL = view.findViewById(R.id.signup_email_TIL);
+        TextInputLayout passwordTIL = view.findViewById(R.id.signup_password_TIL);
         Button registerButton = view.findViewById(R.id.register_button);
         Button skipButton = view.findViewById(R.id.skip_register_button);
 
         // set listeners
         registerButton.setOnClickListener(l -> {
             if (Objects.requireNonNull(emailEditText.getText()).toString().isEmpty()) {
-                emailEditText.setError("Email must not be empty!");
+                emailTIL.setError("Email must not be empty!");
             } else if (Objects.requireNonNull(passwordEditText.getText()).toString().isEmpty()) {
-                passwordEditText.setError("Password must not be empty!");
+                passwordTIL.setError("Password must not be empty!");
             } else if (passwordEditText.getText().toString().length() < 8) {
-                passwordEditText.setError("Password length must be greater than 8 characters!");
+                passwordTIL.setError("Password length must be greater than 8 characters!");
             } else {
                 firebaseAuth.createUserWithEmailAndPassword(emailEditText.getText().toString(), passwordEditText.getText().toString())
                         .addOnCompleteListener(requireActivity(), task -> {
@@ -84,6 +87,7 @@ public class SignUpFragment extends Fragment {
         skipButton.setOnClickListener(l -> {
             Context context = requireContext();
             context.startActivity(new Intent(context, MainActivity.class));
+            requireActivity().finish();
         });
 
     }
@@ -92,7 +96,7 @@ public class SignUpFragment extends Fragment {
         if (currentUser != null) {
             Context context = requireContext();
             context.startActivity(new Intent(context, MainActivity.class));
-            Log.d(TAG, "updateUI: Starting MainActivity");
+            requireActivity().finish();
         }
     }
 }

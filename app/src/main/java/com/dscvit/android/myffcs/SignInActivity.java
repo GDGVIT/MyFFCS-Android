@@ -19,7 +19,7 @@ public class SignInActivity extends AppCompatActivity {
         SegmentedButtonGroup segmentedButtonGroup = findViewById(R.id.segmentedButtonGroup);
         ViewPager viewPager = findViewById(R.id.signin_viewpager);
         viewPager.setAdapter(new CustomPagerAdapter(getSupportFragmentManager()));
-        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -38,11 +38,10 @@ public class SignInActivity extends AppCompatActivity {
 
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
 
-            segmentedButtonGroup.setOnClickedButtonListener(position -> {
-                viewPager.setCurrentItem(position, true);
-            });
+            segmentedButtonGroup.setOnClickedButtonListener(position -> viewPager.setCurrentItem(position, true));
         } else {
             startActivity(new Intent(this, MainActivity.class));
+            finish();
         }
     }
 }

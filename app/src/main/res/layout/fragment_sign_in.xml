@@ -37,6 +37,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
+                android:id="@+id/login_email_TIL"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
@@ -98,6 +99,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:id="@+id/login_password_TIL"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:background="@android:color/transparent"
