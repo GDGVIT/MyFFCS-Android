@@ -17,4 +17,9 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
+    <style name="custom_spinner_style">
+        <item name="android:showDividers">none</item>
+        <item name="android:popupBackground">@drawable/custom_spinner_bg</item>
+    </style>
+
 </resources>
