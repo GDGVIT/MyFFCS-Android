@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.DisplayTimeTableFragment">
+
+    <Button
+        android:id="@+id/go_back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/button_blue_bg"
+        android:drawableStart="@drawable/ic_arrow_left"
+        android:drawablePadding="48dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="24dp"
+        android:text="@string/your_timetable"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <co.ceryle.segmentedbutton.SegmentedButtonGroup
+        android:id="@+id/segmentedButtonGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:elevation="2dp"
+        app:layout_constraintEnd_toEndOf="@+id/go_back_button"
+        app:layout_constraintStart_toStartOf="@+id/go_back_button"
+        app:layout_constraintTop_toBottomOf="@+id/go_back_button"
+        app:sbg_backgroundColor="@color/blue_text_desc"
+        app:sbg_draggable="false"
+        app:sbg_position="0"
+        app:sbg_radius="30dp"
+        app:sbg_selectorColor="@android:color/white">
+
+        <co.ceryle.segmentedbutton.SegmentedButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            app:sb_text="Course"
+            app:sb_textColor="@android:color/white"
+            app:sb_textColor_onSelection="@color/blue_700" />
+
+        <co.ceryle.segmentedbutton.SegmentedButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="5dp"
+            app:sb_text="Day"
+            app:sb_textColor="@android:color/white"
+            app:sb_textColor_onSelection="@color/blue_700" />
+
+    </co.ceryle.segmentedbutton.SegmentedButtonGroup>
+
+    <FrameLayout
+        android:id="@+id/nested_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/segmentedButtonGroup" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

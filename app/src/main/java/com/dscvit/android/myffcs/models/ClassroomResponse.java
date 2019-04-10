@@ -3,36 +3,52 @@ package com.dscvit.android.myffcs.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity
 public class ClassroomResponse {
 
-    @NonNull
-    @PrimaryKey
+    @ColumnInfo
     @SerializedName("CODE")
     @Expose
     private String code;
+
+    @ColumnInfo
     @SerializedName("TITLE")
     @Expose
     private String title;
+
+    @ColumnInfo
     @SerializedName("TYPE")
     @Expose
     private String type;
+
+    @ColumnInfo
     @SerializedName("CREDITS")
     @Expose
     private String credits;
+
+    @ColumnInfo
     @SerializedName("VENUE")
     @Expose
     private String venue;
+
+    @ColumnInfo
     @SerializedName("SLOT")
     @Expose
     private String slot;
+
+    @ColumnInfo
     @SerializedName("FACULTY")
     @Expose
     private String faculty;
+
+    @PrimaryKey
+    @SerializedName("id")
+    @Expose
+    private int id;
 
     /**
      * No args constructor for use in serialization
@@ -49,7 +65,7 @@ public class ClassroomResponse {
      * @param slot
      * @param type
      */
-    public ClassroomResponse(String code, String title, String type, String credits, String venue, String slot, String faculty) {
+    public ClassroomResponse(String code, String title, String type, String credits, String venue, String slot, String faculty, int id) {
         super();
         this.code = code;
         this.title = title;
@@ -58,6 +74,7 @@ public class ClassroomResponse {
         this.venue = venue;
         this.slot = slot;
         this.faculty = faculty;
+        this.id = id;
     }
 
     public String getCode() {
@@ -114,5 +131,13 @@ public class ClassroomResponse {
 
     public void setFaculty(String faculty) {
         this.faculty = faculty;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
