@@ -23,6 +23,6 @@ public interface ApiModel {
     @POST("user/add")
     Call<String> addUser(@Field("uid") String userId, @Field("userName") String userName);
 
-    @GET("myffcs.json")
-    Call<List<ClassroomResponse>> getAllCourses();
+    @GET("classroom/search")
+    Call<List<ClassroomModel>> getAllCourses();
 }

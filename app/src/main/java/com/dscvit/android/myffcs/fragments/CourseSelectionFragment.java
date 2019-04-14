@@ -2,7 +2,6 @@ package com.dscvit.android.myffcs.fragments;
 
 
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,23 +19,22 @@ import android.widget.TextView;
 import com.dscvit.android.myffcs.R;
 import com.dscvit.android.myffcs.adapters.CustomSpinnerAdapter;
 import com.dscvit.android.myffcs.models.ApiModel;
+import com.dscvit.android.myffcs.models.ClassroomModel;
 import com.dscvit.android.myffcs.models.ClassroomResponse;
-import com.dscvit.android.myffcs.utils.AppDatabase;
-import com.dscvit.android.myffcs.utils.DatabaseContainer;
+import com.dscvit.android.myffcs.models.CourseViewModel;
 import com.dscvit.android.myffcs.utils.Utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -44,7 +42,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,9 +52,9 @@ public class CourseSelectionFragment extends Fragment {
     private static HashSet<String> allCourseNames = new HashSet<>();
     private static List<String> allCourseCodes = new ArrayList<>();
     private ApiModel apiClient;
-    private ApiModel apiClient1;
-    private AppDatabase database;
     private List<ClassroomResponse> courseList = new ArrayList<>();
+    private CourseViewModel viewModel;
+    private ArrayAdapter<String> autocompleteAdapter;
 
 
     public CourseSelectionFragment() {
@@ -73,7 +70,15 @@ public class CourseSelectionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        database = DatabaseContainer.getInstance(requireContext());
+        viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
+        viewModel.getAllCourses().observe(this, classroomModels -> {
+            for (ClassroomModel item : classroomModels) {
+                allCourseCodes.add(item.getCode());
+                allCourseCodes.add(item.getTitle());
+            }
+            allCourseCodes = new ArrayList<>(new HashSet<>(allCourseCodes));
+            autocompleteAdapter.notifyDataSetChanged();
+        });
         int cacheSize = 10 * 1024 * 1024;
         Cache cache = new Cache(requireContext().getCacheDir(), cacheSize);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -81,25 +86,12 @@ public class CourseSelectionFragment extends Fragment {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://myffcs-api.herokuapp.com/")
+                .baseUrl(getString(R.string.api_url))
+                .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        Retrofit retrofit1 = new Retrofit.Builder()
-                .baseUrl("https://myffcs-api.herokuapp.com/")
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
-
         apiClient = retrofit.create(ApiModel.class);
-        apiClient1 = retrofit1.create(ApiModel.class);
-        CacheCoursesTask task = new CacheCoursesTask();
-        try {
-            task.execute().get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         Button viewTimeTable = view.findViewById(R.id.go_back_button);
         Spinner facultySpinner = view.findViewById(R.id.course_tab_select_spinner);
@@ -114,7 +106,7 @@ public class CourseSelectionFragment extends Fragment {
         facultyList.add("Select faculty");
 
         CustomSpinnerAdapter facultyAdapter = new CustomSpinnerAdapter(requireContext(), facultyList);
-        ArrayAdapter<String> autocompleteAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_selectable_list_item, allCourseCodes);
+        autocompleteAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_selectable_list_item, allCourseCodes);
 
         facultySpinner.setAdapter(facultyAdapter);
         courseSearch.setAdapter(autocompleteAdapter);
@@ -133,7 +125,7 @@ public class CourseSelectionFragment extends Fragment {
                             facultyList.clear();
 
                             for (ClassroomResponse item : Objects.requireNonNull(response.body())) {
-                                facultyList.add((item.getSlot().equals("NIL") ? "N/A" : item.getSlot()) + ": " + item.getFaculty() + " (" + item.getType() + ")");
+                                facultyList.add((item.getSlot()) + ": " + item.getFaculty() + " (" + item.getType() + ")");
                             }
                             if (dialog.isShowing()) {
                                 dialog.dismiss();
@@ -157,7 +149,7 @@ public class CourseSelectionFragment extends Fragment {
                         public void onResponse(@NonNull Call<List<ClassroomResponse>> call, @NonNull Response<List<ClassroomResponse>> response) {
                             facultyList.clear();
                             for (ClassroomResponse item : Objects.requireNonNull(response.body())) {
-                                facultyList.add((item.getSlot().equals("NIL") ? "N/A" : item.getSlot()) + ": " + item.getFaculty() + " (" + item.getType() + ")");
+                                facultyList.add((item.getSlot()) + ": " + item.getFaculty() + " (" + item.getType() + ")");
                             }
                             if (dialog.isShowing()) {
                                 dialog.dismiss();
@@ -240,33 +232,6 @@ public class CourseSelectionFragment extends Fragment {
             transaction.commit();
         });
 
-    }
-
-    private static class CacheCoursesTask extends AsyncTask<Void, Void, List<ClassroomResponse>> {
-
-        @Override
-        protected List<ClassroomResponse> doInBackground(Void... voids) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://gist.githubusercontent.com/ATechnoHazard/72ea29b354302ee13007cb1e69cd9716/raw/016e4f728056fedf4d652667fe475202f425f718/")
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            ApiModel tempClient = retrofit.create(ApiModel.class);
-            Call<List<ClassroomResponse>> allCoursesCall = tempClient.getAllCourses();
-            try {
-                allCourses = allCoursesCall.execute().body();
-                for (ClassroomResponse item : Objects.requireNonNull(allCourses)) {
-                    allCourseNames.add(item.getTitle());
-                    allCourseCodes.add(item.getCode());
-                }
-                allCourseCodes.addAll(allCourseNames);
-                allCourseCodes = new ArrayList<>(new HashSet<>(allCourseCodes));
-                Collections.sort(allCourseCodes);
-            } catch (IOException e) {
-                Log.e(TAG, "doInBackground: ", e);
-            }
-            return allCourses;
-        }
     }
 
 

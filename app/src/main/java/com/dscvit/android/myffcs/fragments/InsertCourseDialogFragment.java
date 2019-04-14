@@ -3,69 +3,58 @@ package com.dscvit.android.myffcs.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.dscvit.android.myffcs.models.ClassroomResponse;
-import com.dscvit.android.myffcs.utils.AppDatabase;
-import com.dscvit.android.myffcs.utils.DatabaseContainer;
+import com.dscvit.android.myffcs.models.CourseViewModel;
+import com.dscvit.android.myffcs.utils.Utils;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProviders;
 
 public class InsertCourseDialogFragment extends DialogFragment {
     private ClassroomResponse insertCourse;
+    private CourseViewModel viewModel;
+    private boolean isSlotClash = false;
+    private List<ClassroomResponse> savedCourses;
 
     public InsertCourseDialogFragment() {
     }
 
     @SuppressLint("ValidFragment")
-    public InsertCourseDialogFragment(ClassroomResponse insertCourse) {
+    InsertCourseDialogFragment(ClassroomResponse insertCourse) {
         this.insertCourse = insertCourse;
     }
 
-    @SuppressLint("StaticFieldLeak")
+
     @NonNull
-    @Override
-
-
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AppDatabase database = DatabaseContainer.getInstance(requireContext());
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+
+        viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
+        viewModel.getSavedCourses().observe(this, responseList -> savedCourses = responseList);
+
         builder.setMessage("Add this course to the time table?")
-                .setPositiveButton("Yes", (dialog, which) -> new AsyncTask<Void, Void, Void>() {
-                    ProgressDialog dialog = new ProgressDialog(requireContext());
-                    String test = null;
-
-                    @Override
-                    protected void onPreExecute() {
-                        super.onPreExecute();
-                        dialog.setMessage("Saving...");
-                        dialog.show();
-                    }
-
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        database.courseDao().insertCourse(insertCourse);
-                        test = database.courseDao().getSavedCourses().get(0).getTitle();
-                        return null;
-                    }
-
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        super.onPostExecute(aVoid);
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                            //Toast.makeText(requireContext(), "Successfully saved", Toast.LENGTH_SHORT).show();
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    if (Utils.canClashWith(insertCourse, savedCourses)) {
+                        Toast.makeText(requireContext(), "Slots clashed!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        for (ClassroomResponse item : savedCourses) {
+                            if (item.getCode().equals(insertCourse.getCode()) && item.getType().equals(insertCourse.getType())) {
+                                Toast.makeText(requireContext(), "You have already registered this course component", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
                         }
+                        viewModel.insertCourse(insertCourse);
                     }
-                }.execute())
-                .setNegativeButton("No", (dialog, which) -> {
-                    this.dismiss();
-                });
+                })
+                .setNegativeButton("No", (dialog, which) -> this.dismiss());
         return builder.create();
     }
 }

@@ -13,17 +13,24 @@ import android.widget.Toast;
 
 import com.dscvit.android.myffcs.MainActivity;
 import com.dscvit.android.myffcs.R;
+import com.dscvit.android.myffcs.models.ApiModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.IOException;
 import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,6 +38,7 @@ import androidx.fragment.app.Fragment;
 public class SignUpFragment extends Fragment {
     private static final String TAG = "SignUpFragment";
     private FirebaseAuth firebaseAuth;
+    private ApiModel apiModel;
 
 
     public SignUpFragment() {
@@ -47,6 +55,11 @@ public class SignUpFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.api_url))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiModel = retrofit.create(ApiModel.class);
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         updateUI(currentUser);
@@ -95,8 +108,18 @@ public class SignUpFragment extends Fragment {
     private void updateUI(FirebaseUser currentUser) {
         if (currentUser != null) {
             Context context = requireContext();
+            Executor executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                Call<String> insertUserCall = apiModel.addUser(currentUser.getUid(), currentUser.getDisplayName());
+                try {
+                    insertUserCall.execute();
+                } catch (IOException e) {
+                    Log.e(TAG, "updateUI: ", e);
+                }
+            });
             context.startActivity(new Intent(context, MainActivity.class));
             requireActivity().finish();
+
         }
     }
 }

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import co.ceryle.segmentedbutton.SegmentedButtonGroup;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,7 +35,11 @@ public class DisplayTimeTableFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        SegmentedButtonGroup segmentedButtonGroup = view.findViewById(R.id.segmented_course_tabs);
+
         getChildFragmentManager().beginTransaction().replace(R.id.nested_container, new CourseTabFragment()).commit();
+
         Button returnPreviousButton = view.findViewById(R.id.go_back_button);
         returnPreviousButton.setOnClickListener(v -> {
             FragmentTransaction transaction = requireFragmentManager().beginTransaction();
@@ -42,5 +47,20 @@ public class DisplayTimeTableFragment extends Fragment {
             transaction.replace(R.id.main_container, new CourseSelectionFragment());
             transaction.commit();
         });
+
+        segmentedButtonGroup.setOnClickedButtonListener(position -> {
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            switch (position) {
+                case 0:
+                    transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                    transaction.replace(R.id.nested_container, new CourseTabFragment()).commit();
+                    break;
+                case 1:
+                    transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                    transaction.replace(R.id.nested_container, new DayTabFragment()).commit();
+                    break;
+            }
+        });
+
     }
 }

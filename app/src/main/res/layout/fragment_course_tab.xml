@@ -98,7 +98,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView9"
-                tools:listitem="@layout/day_recyclerview_item" />
+                tools:listitem="@layout/course_recyclerview_item" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

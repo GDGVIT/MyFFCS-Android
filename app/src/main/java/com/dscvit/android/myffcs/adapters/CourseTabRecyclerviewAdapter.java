@@ -25,7 +25,7 @@ public class CourseTabRecyclerviewAdapter extends RecyclerView.Adapter<CourseTab
     @NonNull
     @Override
     public DayViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.day_recyclerview_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_recyclerview_item, parent, false);
         return new DayViewHolder(view);
     }
 

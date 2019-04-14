@@ -25,7 +25,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <co.ceryle.segmentedbutton.SegmentedButtonGroup
-        android:id="@+id/segmentedButtonGroup"
+        android:id="@+id/segmented_course_tabs"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toEndOf="@+id/go_back_button"
         app:layout_constraintStart_toStartOf="@+id/go_back_button"
         app:layout_constraintTop_toBottomOf="@+id/go_back_button"
-        app:sbg_backgroundColor="@color/blue_text_desc"
+        app:sbg_backgroundColor="@color/colorPrimary"
         app:sbg_draggable="false"
         app:sbg_position="0"
         app:sbg_radius="30dp"
@@ -43,19 +43,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="5dp"
-            app:sb_text="Course"
+            android:padding="8dp"
+            app:sb_text="Course-wise"
             app:sb_textColor="@android:color/white"
-            app:sb_textColor_onSelection="@color/blue_700" />
+            app:sb_textColor_onSelection="@color/colorPrimary" />
 
         <co.ceryle.segmentedbutton.SegmentedButton
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="5dp"
-            app:sb_text="Day"
+            android:padding="8dp"
+            app:sb_text="Day-wise"
             app:sb_textColor="@android:color/white"
-            app:sb_textColor_onSelection="@color/blue_700" />
+            app:sb_textColor_onSelection="@color/colorPrimary" />
 
     </co.ceryle.segmentedbutton.SegmentedButtonGroup>
 
@@ -68,6 +68,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/segmentedButtonGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/segmented_course_tabs" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

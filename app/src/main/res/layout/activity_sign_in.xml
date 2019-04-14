@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue_a200"
+    android:background="@color/colorPrimary"
     tools:context=".SignInActivity">
 
 
@@ -55,7 +55,7 @@
             android:padding="5dp"
             app:sb_text="Login"
             app:sb_textColor="@android:color/white"
-            app:sb_textColor_onSelection="@color/blue_700" />
+            app:sb_textColor_onSelection="@color/colorSecondary" />
 
         <co.ceryle.segmentedbutton.SegmentedButton
             android:layout_width="0dp"
@@ -64,7 +64,7 @@
             android:padding="5dp"
             app:sb_text="Sign up"
             app:sb_textColor="@android:color/white"
-            app:sb_textColor_onSelection="@color/blue_700" />
+            app:sb_textColor_onSelection="@color/colorSecondary" />
 
 
     </co.ceryle.segmentedbutton.SegmentedButtonGroup>
