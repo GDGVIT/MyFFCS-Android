@@ -1,0 +1,64 @@
+package com.dscvit.android.myffcs.adapters;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.dscvit.android.myffcs.R;
+import com.dscvit.android.myffcs.models.ClassroomResponse;
+import com.dscvit.android.myffcs.utils.Utils;
+
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class DayTabRecyclerviewAdapter extends RecyclerView.Adapter<DayTabRecyclerviewAdapter.DayCoursesViewHolder> {
+    private List<ClassroomResponse> courseList;
+    private String selectedDay;
+
+    public DayTabRecyclerviewAdapter(List<ClassroomResponse> courseList, String selectedDay) {
+        this.courseList = courseList;
+        this.selectedDay = selectedDay;
+    }
+
+    public void setSelectedDay(String selectedDay) {
+        this.selectedDay = selectedDay;
+    }
+
+    @NonNull
+    @Override
+    public DayCoursesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.day_recyclerview_item, parent, false);
+        return new DayCoursesViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull DayCoursesViewHolder holder, int position) {
+        holder.courseNameText.setText(courseList.get(position).getTitle());
+        holder.courseCodeText.setText(courseList.get(position).getCode());
+        holder.slotText.setText(courseList.get(position).getSlot());
+        holder.venueText.setText(courseList.get(position).getVenue());
+        holder.timingText.setText(Utils.getTimingFromCourseAndDay(courseList.get(position), selectedDay));
+    }
+
+    @Override
+    public int getItemCount() {
+        return courseList.size();
+    }
+
+
+    class DayCoursesViewHolder extends RecyclerView.ViewHolder {
+        TextView courseNameText, courseCodeText, slotText, timingText, venueText;
+
+        DayCoursesViewHolder(@NonNull View itemView) {
+            super(itemView);
+            courseNameText = itemView.findViewById(R.id.course_name_text_day);
+            courseCodeText = itemView.findViewById(R.id.course_code_text_day);
+            slotText = itemView.findViewById(R.id.slot_text_day);
+            timingText = itemView.findViewById(R.id.timing_text_day);
+            venueText = itemView.findViewById(R.id.venue_text_day);
+        }
+    }
+}
