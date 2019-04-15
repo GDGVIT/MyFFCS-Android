@@ -63,7 +63,4 @@ dependencies {
     // Apache commons collections
     implementation "org.apache.commons:commons-collections4:4.3"
 
-    // circleimageview
-    implementation 'de.hdodenhof:circleimageview:3.0.0'
-
 }

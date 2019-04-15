@@ -27,7 +27,8 @@ public class Utils {
     }
 
     public static List<String> getSlotDays(String slot) {
-        //Log.d(TAG, "getSlotDays: " + slot);
+        slot = slot.replaceAll("\n", "");
+//        Log.d(TAG, "getSlotDays: " + slot);
         if (!slot.equals("NIL")) {
             return new ArrayList<>(Arrays.asList(Objects.requireNonNull(Utils.getSlotToDay().get(slot)).split("\\|")));
         } else {
@@ -198,6 +199,8 @@ public class Utils {
     }
 
     public static String getTimingFromSlotAndDay(String slot, String day) {
+        slot = slot.replaceAll("\n", "");
+//        Log.d(TAG, "getTimingFromSlotAndDay: " + slot + " " + day);
         return Objects.requireNonNull(getTimingMap().get(day)).get(slot);
     }
 

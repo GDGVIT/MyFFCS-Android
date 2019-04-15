@@ -59,10 +59,14 @@ public class CourseTabFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
         viewModel.getSavedCourses().observe(this, responseList -> {
-            savedCourses = responseList;
-            displayCourses.clear();
-            for (ClassroomResponse item : responseList) {
-                displayCourses.add(item.getCode() + ": " + item.getTitle() + " (" + item.getType() + ")");
+            if (responseList.isEmpty()) {
+                displayCourses.add("Select course");
+            } else {
+                savedCourses = responseList;
+                displayCourses.clear();
+                for (ClassroomResponse item : responseList) {
+                    displayCourses.add(item.getCode() + ": " + item.getTitle() + " (" + item.getType() + ")");
+                }
             }
             customSpinnerAdapter.notifyDataSetChanged();
         });
@@ -80,19 +84,20 @@ public class CourseTabFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (view != null) {
-                    days.clear();
-                    timings.clear();
-                    venues.clear();
                     String spinnerText = ((TextView) view.findViewById(R.id.spinner_item_text)).getText().toString();
                     String courseCode = spinnerText.split(":")[0];
-                    String courseType = spinnerText.split("\\(")[1].split("\\)")[0];
-                    if (Objects.equals(courseCode, "Select course")) {
+                    if (Objects.equals(spinnerText, "Select course")) {
                         days.clear();
                         timings.clear();
                         venues.clear();
                         adapter.notifyDataSetChanged();
                         return;
                     }
+                    days.clear();
+                    timings.clear();
+                    venues.clear();
+                    String courseType = spinnerText.split("\\(")[1].split("\\)")[0];
+
                     //List<String> tempList = new ArrayList<>();
                     for (ClassroomResponse item : savedCourses) {
                         if (Objects.equals(item.getCode(), courseCode) && Objects.equals(item.getType(), courseType)) {

@@ -15,6 +15,7 @@ import com.dscvit.android.myffcs.adapters.DayTabRecyclerviewAdapter;
 import com.dscvit.android.myffcs.models.ClassroomResponse;
 import com.dscvit.android.myffcs.models.CourseViewModel;
 import com.dscvit.android.myffcs.utils.AppDatabase;
+import com.dscvit.android.myffcs.utils.SwipeToDeleteCallback;
 import com.dscvit.android.myffcs.utils.Utils;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,9 +61,11 @@ public class DayTabFragment extends Fragment {
 
 
         RecyclerView recyclerView = view.findViewById(R.id.day_recycler_view);
-        DayTabRecyclerviewAdapter adapter = new DayTabRecyclerviewAdapter(selectedCourses, selectedDay);
+        DayTabRecyclerviewAdapter adapter = new DayTabRecyclerviewAdapter(selectedCourses, selectedDay, requireContext(), requireActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapter));
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
 
         Spinner dayListSpinner = view.findViewById(R.id.day_tab_select_spinner);

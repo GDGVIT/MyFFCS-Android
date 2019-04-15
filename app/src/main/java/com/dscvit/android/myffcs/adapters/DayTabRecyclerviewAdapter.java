@@ -1,5 +1,7 @@
 package com.dscvit.android.myffcs.adapters;
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,7 +9,9 @@ import android.widget.TextView;
 
 import com.dscvit.android.myffcs.R;
 import com.dscvit.android.myffcs.models.ClassroomResponse;
+import com.dscvit.android.myffcs.utils.CourseRepository;
 import com.dscvit.android.myffcs.utils.Utils;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -16,11 +20,40 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class DayTabRecyclerviewAdapter extends RecyclerView.Adapter<DayTabRecyclerviewAdapter.DayCoursesViewHolder> {
     private List<ClassroomResponse> courseList;
+    private ClassroomResponse recentlyDeletedItem;
+    private int recentlyDeletedItemPosition;
     private String selectedDay;
+    private Context context;
+    private Activity activity;
+    private Snackbar snackbar;
+    private CourseRepository courseRepository;
 
-    public DayTabRecyclerviewAdapter(List<ClassroomResponse> courseList, String selectedDay) {
+    public DayTabRecyclerviewAdapter(List<ClassroomResponse> courseList, String selectedDay, Context context, Activity activity) {
         this.courseList = courseList;
         this.selectedDay = selectedDay;
+        this.context = context;
+        this.activity = activity;
+        courseRepository = new CourseRepository(activity.getApplication());
+        View view = activity.findViewById(R.id.coordinator_layout);
+        snackbar = Snackbar.make(view, "Deleted course", Snackbar.LENGTH_LONG);
+        snackbar.setAction("Undo delete", v -> undoDeletedItem());
+        snackbar.addCallback(new Snackbar.Callback() {
+
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                if (event == Snackbar.Callback.DISMISS_EVENT_TIMEOUT || event == Snackbar.Callback.DISMISS_EVENT_SWIPE) {
+                    courseRepository.deleteCourse(recentlyDeletedItem);
+                }
+            }
+
+            @Override
+            public void onShown(Snackbar snackbar) {
+            }
+        });
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     public void setSelectedDay(String selectedDay) {
@@ -46,6 +79,19 @@ public class DayTabRecyclerviewAdapter extends RecyclerView.Adapter<DayTabRecycl
     @Override
     public int getItemCount() {
         return courseList.size();
+    }
+
+    public void deleteItem(int position) {
+        recentlyDeletedItem = courseList.get(position);
+        recentlyDeletedItemPosition = position;
+        courseList.remove(position);
+        notifyItemRemoved(position);
+        snackbar.show();
+    }
+
+    private void undoDeletedItem() {
+        courseList.add(recentlyDeletedItemPosition, recentlyDeletedItem);
+        notifyItemInserted(recentlyDeletedItemPosition);
     }
 
 

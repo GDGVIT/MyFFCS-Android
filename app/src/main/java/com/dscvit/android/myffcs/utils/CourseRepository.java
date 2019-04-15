@@ -40,9 +40,11 @@ public class CourseRepository {
     }
 
     public void insertCourse(ClassroomResponse classroomResponse) {
-        executor.execute(() -> {
-            courseDao.insertCourse(classroomResponse);
-        });
+        executor.execute(() -> courseDao.insertCourse(classroomResponse));
+    }
+
+    public void deleteCourse(ClassroomResponse classroomResponse) {
+        executor.execute(() -> courseDao.delete(classroomResponse));
     }
 
     public LiveData<List<ClassroomModel>> getAllCourses() {
