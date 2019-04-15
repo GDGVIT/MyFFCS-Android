@@ -53,7 +53,6 @@ captures/
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json
-
 # Freeline
 freeline.py
 freeline/
@@ -66,3 +65,4 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 
+/app/src/main/res/values/secrets.xml
