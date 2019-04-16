@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="28dp"
-        android:text="Edit your\ncourse list"
+        android:text="@string/course_selection_title"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="35sp"
         android:textStyle="bold"
@@ -54,7 +54,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
-                    android:hint="Search for courses (ID/name)"
+                    android:hint="@string/course_search_textbox"
                     android:imeOptions="actionSearch"
                     android:inputType="textCapCharacters"
                     android:paddingStart="0dp"
@@ -91,7 +91,8 @@
         android:src="@drawable/ic_arrow_down"
         app:layout_constraintBottom_toBottomOf="@+id/course_tab_select_spinner"
         app:layout_constraintEnd_toEndOf="@+id/course_tab_select_spinner"
-        app:layout_constraintTop_toTopOf="@+id/course_tab_select_spinner" />
+        app:layout_constraintTop_toTopOf="@+id/course_tab_select_spinner"
+        tools:ignore="ContentDescription" />
 
     <Button
         android:id="@+id/go_back_button"
@@ -105,7 +106,7 @@
         android:drawablePadding="48dp"
         android:paddingStart="24dp"
         android:paddingEnd="8dp"
-        android:text="View timetable"
+        android:text="@string/view_timetable_button_title"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="20sp"

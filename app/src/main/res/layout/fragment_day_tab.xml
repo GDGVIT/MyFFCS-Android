@@ -28,7 +28,8 @@
         android:src="@drawable/ic_arrow_down"
         app:layout_constraintBottom_toBottomOf="@+id/day_tab_select_spinner"
         app:layout_constraintEnd_toEndOf="@+id/day_tab_select_spinner"
-        app:layout_constraintTop_toTopOf="@+id/day_tab_select_spinner" />
+        app:layout_constraintTop_toTopOf="@+id/day_tab_select_spinner"
+        tools:ignore="ContentDescription" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/day_recycler_view"
