@@ -21,7 +21,6 @@ import androidx.lifecycle.ViewModelProviders;
 public class InsertCourseDialogFragment extends DialogFragment {
     private ClassroomResponse insertCourse;
     private CourseViewModel viewModel;
-    private boolean isSlotClash = false;
     private List<ClassroomResponse> savedCourses;
 
     public InsertCourseDialogFragment() {

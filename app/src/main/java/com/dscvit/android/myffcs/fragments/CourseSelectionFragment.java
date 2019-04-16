@@ -111,6 +111,7 @@ public class CourseSelectionFragment extends Fragment {
 
         courseSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                Utils.hideKeyboardFrom(requireContext(), view);
                 ProgressDialog dialog = new ProgressDialog(requireContext());
                 dialog.setMessage("Please wait...");
                 dialog.show();
@@ -196,7 +197,7 @@ public class CourseSelectionFragment extends Fragment {
                                 if (dialog.isShowing()) {
                                     dialog.dismiss();
                                 }
-                                InsertCourseDialogFragment fragment = new InsertCourseDialogFragment(response.body().get(0));
+                                InsertCourseDialogFragment fragment = new InsertCourseDialogFragment(Objects.requireNonNull(response.body()).get(0));
                                 fragment.show(requireFragmentManager(), "insertcourse");
                             }
 

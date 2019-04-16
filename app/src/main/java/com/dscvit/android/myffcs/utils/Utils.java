@@ -1,6 +1,10 @@
 package com.dscvit.android.myffcs.utils;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.dscvit.android.myffcs.models.ClassroomResponse;
 
@@ -403,5 +407,10 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
