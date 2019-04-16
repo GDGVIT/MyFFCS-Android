@@ -1,8 +1,6 @@
 package com.dscvit.android.myffcs.utils;
 
-import android.app.Activity;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 
 import com.dscvit.android.myffcs.models.ClassroomResponse;
 
@@ -21,14 +19,8 @@ public class Utils {
     private static HashMap<String, HashMap<String, String>> timingMap = null;
     private static BidiMap<String, String> slotsThatCanClash = null;
 
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
-    }
-
     public static List<String> getSlotDays(String slot) {
         slot = slot.replaceAll("\n", "");
-//        Log.d(TAG, "getSlotDays: " + slot);
         if (!slot.equals("NIL")) {
             return new ArrayList<>(Arrays.asList(Objects.requireNonNull(Utils.getSlotToDay().get(slot)).split("\\|")));
         } else {
@@ -198,7 +190,7 @@ public class Utils {
         return timingMap;
     }
 
-    public static String getTimingFromSlotAndDay(String slot, String day) {
+    private static String getTimingFromSlotAndDay(String slot, String day) {
         slot = slot.replaceAll("\n", "");
 //        Log.d(TAG, "getTimingFromSlotAndDay: " + slot + " " + day);
         return Objects.requireNonNull(getTimingMap().get(day)).get(slot);

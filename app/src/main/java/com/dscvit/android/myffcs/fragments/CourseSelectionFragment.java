@@ -73,10 +73,11 @@ public class CourseSelectionFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
         viewModel.getAllCourses().observe(this, classroomModels -> {
             for (ClassroomModel item : classroomModels) {
-                allCourseCodes.add(item.getCode());
-                allCourseCodes.add(item.getTitle());
+                if (!allCourseCodes.contains(item.getCode()) && !allCourseCodes.contains(item.getTitle())) {
+                    allCourseCodes.add(item.getCode());
+                    allCourseCodes.add(item.getTitle());
+                }
             }
-            allCourseCodes = new ArrayList<>(new HashSet<>(allCourseCodes));
             autocompleteAdapter.notifyDataSetChanged();
         });
         int cacheSize = 10 * 1024 * 1024;
