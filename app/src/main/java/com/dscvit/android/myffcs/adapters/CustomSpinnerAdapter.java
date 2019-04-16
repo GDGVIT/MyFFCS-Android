@@ -17,7 +17,6 @@ import androidx.annotation.Nullable;
 public class CustomSpinnerAdapter extends ArrayAdapter {
     private List<String> items;
     private Context context;
-    private int selectedIndex = -1;
 
     public CustomSpinnerAdapter(@NonNull Context context, List<String> items) {
         super(context, R.layout.custom_spinner_item);
@@ -28,10 +27,6 @@ public class CustomSpinnerAdapter extends ArrayAdapter {
     @Override
     public int getCount() {
         return items.size();
-    }
-
-    public void setSelection(int position) {
-
     }
 
     @NonNull

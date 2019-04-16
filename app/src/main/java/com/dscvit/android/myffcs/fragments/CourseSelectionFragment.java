@@ -26,7 +26,6 @@ import com.dscvit.android.myffcs.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,12 +47,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class CourseSelectionFragment extends Fragment {
     private static final String TAG = "CourseSelectionFragment";
-    private static List<ClassroomResponse> allCourses;
-    private static HashSet<String> allCourseNames = new HashSet<>();
     private static List<String> allCourseCodes = new ArrayList<>();
     private ApiModel apiClient;
-    private List<ClassroomResponse> courseList = new ArrayList<>();
-    private CourseViewModel viewModel;
     private ArrayAdapter<String> autocompleteAdapter;
 
 
@@ -70,7 +65,8 @@ public class CourseSelectionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
+
+        CourseViewModel viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
         viewModel.getAllCourses().observe(this, classroomModels -> {
             for (ClassroomModel item : classroomModels) {
                 if (!allCourseCodes.contains(item.getCode()) && !allCourseCodes.contains(item.getTitle())) {
@@ -80,6 +76,7 @@ public class CourseSelectionFragment extends Fragment {
             }
             autocompleteAdapter.notifyDataSetChanged();
         });
+
         int cacheSize = 10 * 1024 * 1024;
         Cache cache = new Cache(requireContext().getCacheDir(), cacheSize);
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -195,11 +192,6 @@ public class CourseSelectionFragment extends Fragment {
                         finalCourseCall.enqueue(new Callback<List<ClassroomResponse>>() {
                             @Override
                             public void onResponse(@NonNull Call<List<ClassroomResponse>> call, @NonNull Response<List<ClassroomResponse>> response) {
-                                try {
-                                    courseList.addAll(Objects.requireNonNull(response.body()));
-                                } catch (Exception e) {
-                                    Log.e(TAG, "onResponse: ", e);
-                                }
                                 Log.d(TAG, "onResponse: " + response.body());
                                 if (dialog.isShowing()) {
                                     dialog.dismiss();

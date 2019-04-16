@@ -41,7 +41,6 @@ public class CourseTabFragment extends Fragment {
     private List<ClassroomResponse> savedCourses = new ArrayList<>();
     private ArrayList<String> days = new ArrayList<>(), timings = new ArrayList<>(), venues = new ArrayList<>();
     private CustomSpinnerAdapter customSpinnerAdapter;
-    private CourseViewModel viewModel;
 
     public CourseTabFragment() {
         // Required empty public constructor
@@ -57,7 +56,7 @@ public class CourseTabFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
+        CourseViewModel viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
         viewModel.getSavedCourses().observe(this, responseList -> {
             if (responseList.isEmpty()) {
                 displayCourses.add("Select course");

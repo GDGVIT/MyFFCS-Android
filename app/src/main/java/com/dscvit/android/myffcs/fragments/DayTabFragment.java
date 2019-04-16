@@ -14,7 +14,6 @@ import com.dscvit.android.myffcs.adapters.CustomSpinnerAdapter;
 import com.dscvit.android.myffcs.adapters.DayTabRecyclerviewAdapter;
 import com.dscvit.android.myffcs.models.ClassroomResponse;
 import com.dscvit.android.myffcs.models.CourseViewModel;
-import com.dscvit.android.myffcs.utils.AppDatabase;
 import com.dscvit.android.myffcs.utils.SwipeToDeleteCallback;
 import com.dscvit.android.myffcs.utils.Utils;
 
@@ -35,12 +34,9 @@ import androidx.recyclerview.widget.RecyclerView;
  * A simple {@link Fragment} subclass.
  */
 public class DayTabFragment extends Fragment {
-    private static final String TAG = "DayTabFragment";
-    private AppDatabase database;
     private List<ClassroomResponse> displayCourses = new ArrayList<>();
     private List<ClassroomResponse> selectedCourses = new ArrayList<>();
     private String selectedDay;
-    private CourseViewModel viewModel;
 
     public DayTabFragment() {
         // Required empty public constructor
@@ -55,9 +51,8 @@ public class DayTabFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
+        CourseViewModel viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
         viewModel.getSavedCourses().observe(this, responseList -> displayCourses = responseList);
-        database = AppDatabase.getInstance(requireContext().getApplicationContext());
 
 
         RecyclerView recyclerView = view.findViewById(R.id.day_recycler_view);
@@ -87,7 +82,6 @@ public class DayTabFragment extends Fragment {
                                 }
                             }
                         }
-                        // selectedCourses = new ArrayList<>(new HashSet<>(selectedCourses));
                         adapter.setSelectedDay(selectedDay);
                         adapter.notifyDataSetChanged();
                     }
