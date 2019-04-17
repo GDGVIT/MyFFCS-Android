@@ -57,13 +57,14 @@ public class ClassroomResponse {
     }
 
     /**
-     * @param title
-     * @param faculty
-     * @param venue
-     * @param code
-     * @param credits
-     * @param slot
-     * @param type
+     * @param title Course title
+     * @param faculty Faculty name
+     * @param venue Course venue
+     * @param code Course code
+     * @param credits Number of credits the course is worth
+     * @param slot Slots the course is during
+     * @param type Course type (Theory, Lab, Project)
+     * @param id Unique identifier for the course
      */
     public ClassroomResponse(String code, String title, String type, String credits, String venue, String slot, String faculty, int id) {
         super();
