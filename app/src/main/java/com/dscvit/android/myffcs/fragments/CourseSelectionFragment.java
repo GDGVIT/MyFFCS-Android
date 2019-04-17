@@ -185,7 +185,7 @@ public class CourseSelectionFragment extends Fragment {
                         facultyText = facultyText.split(": ")[1].split("\\Q (\\E")[0];
 
                         Log.d(TAG, "onItemSelected: " + facultyText + slotText);
-                        Call<List<ClassroomResponse>> finalCourseCall = null;
+                        Call<List<ClassroomResponse>> finalCourseCall;
                         finalCourseCall = apiClient.searchCourses(null, facultyText, null, slotText);
                         Log.d(TAG, facultyText);
                         Log.d(TAG, slotText.replaceAll("\\+", "%2B"));
