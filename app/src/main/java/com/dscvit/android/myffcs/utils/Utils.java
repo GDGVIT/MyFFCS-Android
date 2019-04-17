@@ -6,7 +6,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.dscvit.android.myffcs.R;
 import com.dscvit.android.myffcs.models.ClassroomResponse;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualHashBidiMap;
@@ -327,7 +329,7 @@ public class Utils {
         return slotToDays;
     }
 
-    public static boolean canClashWith(ClassroomResponse courseToSave, List<ClassroomResponse> savedCourses) {
+    public static boolean canClashWith(Activity activity, ClassroomResponse courseToSave, List<ClassroomResponse> savedCourses) {
         if (slotsThatCanClash == null) {
             slotsThatCanClash = new DualHashBidiMap<>();
 
@@ -379,15 +381,23 @@ public class Utils {
             slotsThatCanClash.put("V7", "L60");
 
         }
+        View view = activity.findViewById(R.id.coordinator_layout);
         for (ClassroomResponse item : savedCourses) {
             for (String savedSlot : getSlotsFromCourse(item)) {
                 for (String currentSlot : getSlotsFromCourse(courseToSave)) {
                     if (savedSlot.equals(currentSlot) && !savedSlot.equals("NIL")) {
+                        Snackbar snackbar = Snackbar.make(view, "Slot " + currentSlot + " clashed with slot " + savedSlot + " of course " + item.getTitle(), Snackbar.LENGTH_INDEFINITE);
+                        snackbar.setAction("OK", v -> snackbar.dismiss());
+                        snackbar.show();
+
                         return true;
                     }
                     try {
                         for (String splitSlot : Objects.requireNonNull(slotsThatCanClash.get(currentSlot)).split("\\|")) {
                             if (savedSlot.equals(splitSlot)) {
+                                Snackbar snackbar = Snackbar.make(view, "Slot " + currentSlot + " clashed with slot " + savedSlot + " of course " + item.getTitle(), Snackbar.LENGTH_INDEFINITE);
+                                snackbar.setAction("OK", v -> snackbar.dismiss());
+                                snackbar.show();
                                 return true;
                             }
                         }
@@ -399,6 +409,9 @@ public class Utils {
                         if (value.contains(currentSlot)) {
                             String key = slotsThatCanClash.getKey(value);
                             if (savedSlot.equals(key)) {
+                                Snackbar snackbar = Snackbar.make(view, "Slot " + currentSlot + " clashed with slot " + savedSlot + " of course " + item.getTitle(), Snackbar.LENGTH_INDEFINITE);
+                                snackbar.setAction("OK", v -> snackbar.dismiss());
+                                snackbar.show();
                                 return true;
                             }
                         }

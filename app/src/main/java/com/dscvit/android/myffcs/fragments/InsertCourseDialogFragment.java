@@ -41,9 +41,7 @@ public class InsertCourseDialogFragment extends DialogFragment {
 
         builder.setMessage("Add this course to the time table?")
                 .setPositiveButton("Yes", (dialog, which) -> {
-                    if (Utils.canClashWith(insertCourse, savedCourses)) {
-                        Toast.makeText(requireContext(), "Slots clashed!", Toast.LENGTH_SHORT).show();
-                    } else {
+                    if (!Utils.canClashWith(requireActivity(), insertCourse, savedCourses)) {
                         for (ClassroomResponse item : savedCourses) {
                             if (item.getCode().equals(insertCourse.getCode()) && item.getType().equals(insertCourse.getType())) {
                                 Toast.makeText(requireContext(), "You have already registered this course component", Toast.LENGTH_SHORT).show();
