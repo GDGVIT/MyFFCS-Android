@@ -16,6 +16,12 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
+
 import com.dscvit.android.myffcs.R;
 import com.dscvit.android.myffcs.adapters.CustomSpinnerAdapter;
 import com.dscvit.android.myffcs.models.ApiModel;
@@ -29,11 +35,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProviders;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -65,6 +66,7 @@ public class CourseSelectionFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
 
         CourseViewModel viewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
         viewModel.getAllCourses().observe(this, classroomModels -> {
@@ -225,7 +227,6 @@ public class CourseSelectionFragment extends Fragment {
             transaction.replace(R.id.main_container, new DisplayTimeTableFragment());
             transaction.commit();
         });
-
     }
 
 

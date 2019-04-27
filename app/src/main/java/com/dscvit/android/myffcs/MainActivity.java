@@ -2,10 +2,10 @@ package com.dscvit.android.myffcs;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.dscvit.android.myffcs.fragments.CourseSelectionFragment;
 import com.dscvit.android.myffcs.utils.CourseRepository;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
