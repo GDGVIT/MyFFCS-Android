@@ -2,6 +2,7 @@ package com.dscvit.android.myffcs.fragments;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,10 +34,13 @@ import androidx.recyclerview.widget.RecyclerView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class DayTabFragment extends Fragment {
+public class DayTabFragment extends Fragment implements DayTabRecyclerviewAdapter.itemRestoredListener {
     private List<ClassroomResponse> displayCourses = new ArrayList<>();
     private List<ClassroomResponse> selectedCourses = new ArrayList<>();
     private String selectedDay;
+    private RecyclerView recyclerView;
+    private static final String TAG = "DayTabFragment";
+
 
     public DayTabFragment() {
         // Required empty public constructor
@@ -55,8 +59,8 @@ public class DayTabFragment extends Fragment {
         viewModel.getSavedCourses().observe(this, responseList -> displayCourses = responseList);
 
 
-        RecyclerView recyclerView = view.findViewById(R.id.day_recycler_view);
-        DayTabRecyclerviewAdapter adapter = new DayTabRecyclerviewAdapter(selectedCourses, selectedDay, requireContext(), requireActivity());
+        recyclerView = view.findViewById(R.id.day_recycler_view);
+        DayTabRecyclerviewAdapter adapter = new DayTabRecyclerviewAdapter(selectedCourses, selectedDay, requireContext(), requireActivity(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(adapter));
@@ -97,4 +101,9 @@ public class DayTabFragment extends Fragment {
 
     }
 
+    @Override
+    public void onItemRestored(int position) {
+        recyclerView.smoothScrollToPosition(position);
+        Log.d(TAG, "onItemRestored: " + position);
+    }
 }

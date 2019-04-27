@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.dscvit.android.myffcs.R;
+import com.dscvit.android.myffcs.fragments.DayTabFragment;
 import com.dscvit.android.myffcs.models.ClassroomResponse;
 import com.dscvit.android.myffcs.utils.CourseRepository;
 import com.dscvit.android.myffcs.utils.Utils;
@@ -24,15 +25,18 @@ public class DayTabRecyclerviewAdapter extends RecyclerView.Adapter<DayTabRecycl
     private int recentlyDeletedItemPosition;
     private String selectedDay;
     private Context context;
-    private Activity activity;
     private Snackbar snackbar;
     private CourseRepository courseRepository;
+    public interface itemRestoredListener {
+        void onItemRestored(int position);
+    }
+    private itemRestoredListener listener;
 
-    public DayTabRecyclerviewAdapter(List<ClassroomResponse> courseList, String selectedDay, Context context, Activity activity) {
+    public DayTabRecyclerviewAdapter(List<ClassroomResponse> courseList, String selectedDay, Context context, Activity activity, itemRestoredListener listener) {
         this.courseList = courseList;
         this.selectedDay = selectedDay;
         this.context = context;
-        this.activity = activity;
+        this.listener = listener;
         courseRepository = new CourseRepository(activity.getApplication());
         View view = activity.findViewById(R.id.coordinator_layout);
         snackbar = Snackbar.make(view, "Deleted course", Snackbar.LENGTH_LONG);
@@ -92,6 +96,8 @@ public class DayTabRecyclerviewAdapter extends RecyclerView.Adapter<DayTabRecycl
     private void undoDeletedItem() {
         courseList.add(recentlyDeletedItemPosition, recentlyDeletedItem);
         notifyItemInserted(recentlyDeletedItemPosition);
+        listener.onItemRestored(recentlyDeletedItemPosition);
+
     }
 
 
