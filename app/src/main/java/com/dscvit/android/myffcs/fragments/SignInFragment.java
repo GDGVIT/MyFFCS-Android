@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.dscvit.android.myffcs.MainActivity;
 import com.dscvit.android.myffcs.R;
 import com.dscvit.android.myffcs.models.ApiModel;
@@ -40,12 +44,9 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class SignInFragment extends Fragment {
     private static final String TAG = "SignInFragment";
@@ -73,7 +74,7 @@ public class SignInFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getString(R.string.api_url))
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
         apiModel = retrofit.create(ApiModel.class);
         updateUI(firebaseAuth.getCurrentUser());
@@ -154,7 +155,7 @@ public class SignInFragment extends Fragment {
             Context context = requireContext();
             Executor executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
-                Call<String> insertUserCall = apiModel.addUser(currentUser.getUid(), currentUser.getDisplayName());
+                Call<String> insertUserCall = apiModel.addUser(currentUser.getUid(), currentUser.getEmail());
                 try {
                     insertUserCall.execute();
                 } catch (IOException e) {

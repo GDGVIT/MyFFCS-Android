@@ -2,12 +2,12 @@ package com.dscvit.android.myffcs.models;
 
 import android.app.Application;
 
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+
 import com.dscvit.android.myffcs.utils.CourseRepository;
 
 import java.util.List;
-
-import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 
 public class CourseViewModel extends AndroidViewModel {
     private CourseRepository repository;
@@ -31,5 +31,13 @@ public class CourseViewModel extends AndroidViewModel {
 
     public void insertCourse(ClassroomResponse classroomResponse) {
         repository.insertCourse(classroomResponse);
+    }
+
+    public void insertCourseList(List<ClassroomResponse> responses) {
+        repository.insertCourseList(responses);
+    }
+
+    public void deleteAllCourses() {
+        repository.deleteAllCourses();
     }
 }

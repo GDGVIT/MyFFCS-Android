@@ -11,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.dscvit.android.myffcs.MainActivity;
 import com.dscvit.android.myffcs.R;
 import com.dscvit.android.myffcs.models.ApiModel;
@@ -25,12 +29,9 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,7 +58,7 @@ public class SignUpFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getString(R.string.api_url))
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
         apiModel = retrofit.create(ApiModel.class);
         firebaseAuth = FirebaseAuth.getInstance();
@@ -110,9 +111,10 @@ public class SignUpFragment extends Fragment {
             Context context = requireContext();
             Executor executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
-                Call<String> insertUserCall = apiModel.addUser(currentUser.getUid(), currentUser.getDisplayName());
+                Call<String> insertUserCall = apiModel.addUser(currentUser.getUid(), currentUser.getEmail());
                 try {
                     insertUserCall.execute();
+                    Log.d(TAG, "updateUI: Inserting user: " + currentUser.getUid() + " " + currentUser.getDisplayName());
                 } catch (IOException e) {
                     Log.e(TAG, "updateUI: ", e);
                 }

@@ -6,17 +6,17 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.dscvit.android.myffcs.models.ClassroomResponse;
-import com.dscvit.android.myffcs.models.CourseViewModel;
-import com.dscvit.android.myffcs.utils.Utils;
-
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProviders;
+
+import com.dscvit.android.myffcs.models.ClassroomResponse;
+import com.dscvit.android.myffcs.models.CourseViewModel;
+import com.dscvit.android.myffcs.utils.Utils;
+
+import java.util.List;
 
 public class InsertCourseDialogFragment extends DialogFragment {
     private ClassroomResponse insertCourse;
