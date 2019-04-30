@@ -3,6 +3,9 @@ package com.dscvit.android.myffcs.utils;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+
 import com.dscvit.android.myffcs.models.ApiModel;
 import com.dscvit.android.myffcs.models.ClassroomModel;
 import com.dscvit.android.myffcs.models.ClassroomResponse;
@@ -12,8 +15,6 @@ import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,6 +48,12 @@ public class CourseRepository {
         executor.execute(() -> courseDao.delete(classroomResponse));
     }
 
+    public void deleteAllCourses() {
+        executor.execute(() -> {
+            courseDao.deleteAllCourses();
+        });
+    }
+
     public LiveData<List<ClassroomModel>> getAllCourses() {
         updateAllCourses();
         return allCourses;
@@ -75,5 +82,9 @@ public class CourseRepository {
                 Log.e(TAG, "onFailure: ", t);
             }
         });
+    }
+
+    public void insertCourseList(List<ClassroomResponse> responses) {
+        executor.execute(() -> courseDao.insertAll(responses));
     }
 }
