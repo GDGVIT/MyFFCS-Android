@@ -26,4 +26,5 @@
     <string name="course_wise_segmented_button_title">Course-wise</string>
     <string name="day_wise_segmented_button_title">Day-wise</string>
     <string name="sign_in_button_text">Sign in</string>
+    <string name="register_course_button">Register</string>
 </resources>

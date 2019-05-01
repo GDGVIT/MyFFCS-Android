@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -93,6 +93,7 @@ public class CourseSelectionFragment extends Fragment {
 
         apiClient = retrofit.create(ApiModel.class);
 
+        Button registerCourse = view.findViewById(R.id.register_course_button);
         Button viewTimeTable = view.findViewById(R.id.go_back_button);
         Spinner facultySpinner = view.findViewById(R.id.course_tab_select_spinner);
         ImageView facultyImage = view.findViewById(R.id.faculty_image);
@@ -101,6 +102,7 @@ public class CourseSelectionFragment extends Fragment {
 
         facultySpinner.setVisibility(View.GONE);
         facultyImage.setVisibility(View.GONE);
+        registerCourse.setVisibility(View.GONE);
 
         List<String> facultyList = new ArrayList<>();
         facultyList.add("Select faculty");
@@ -136,6 +138,7 @@ public class CourseSelectionFragment extends Fragment {
                             facultyAdapter.notifyDataSetChanged();
                             facultySpinner.setVisibility(View.VISIBLE);
                             facultyImage.setVisibility(View.VISIBLE);
+                            registerCourse.setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -160,6 +163,7 @@ public class CourseSelectionFragment extends Fragment {
                             facultyAdapter.notifyDataSetChanged();
                             facultySpinner.setVisibility(View.VISIBLE);
                             facultyImage.setVisibility(View.VISIBLE);
+                            registerCourse.setVisibility(View.VISIBLE);
                         }
 
                         @Override
@@ -172,55 +176,48 @@ public class CourseSelectionFragment extends Fragment {
             }
             return false;
         });
-        facultySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (view != null) {
-                    TextView selectedText = view.findViewById(R.id.spinner_item_text);
-                    String facultyText = selectedText.getText().toString();
-                    String slotText;
-                    if (!facultyText.equals("Select faculty")) {
-                        ProgressDialog dialog = new ProgressDialog(requireContext());
-                        dialog.setMessage("Please wait...");
-                        dialog.show();
-                        slotText = facultyText.split(": ")[0];
-                        facultyText = facultyText.split(": ")[1].split("\\Q (\\E")[0];
+        registerCourse.setOnClickListener(v -> {
+            View facultyView = facultySpinner.getSelectedView();
+            TextView selectedText = facultyView.findViewById(R.id.spinner_item_text);
+            String facultyText = selectedText.getText().toString();
+            String slotText;
+            if (!facultyText.equals("Select faculty")) {
+                ProgressDialog dialog = new ProgressDialog(requireContext());
+                dialog.setMessage("Please wait...");
+                dialog.show();
+                slotText = facultyText.split(": ")[0];
+                facultyText = facultyText.split(": ")[1].split("\\Q (\\E")[0];
 
-                        Log.d(TAG, "onItemSelected: " + facultyText + slotText);
-                        Call<List<ClassroomResponse>> finalCourseCall;
-                        finalCourseCall = apiClient.searchCourses(null, facultyText, null, slotText);
-                        Log.d(TAG, facultyText);
-                        Log.d(TAG, slotText.replaceAll("\\+", "%2B"));
-                        Log.d(TAG, "onItemSelected: " + finalCourseCall.request());
-                        finalCourseCall.enqueue(new Callback<List<ClassroomResponse>>() {
-                            @Override
-                            public void onResponse(@NonNull Call<List<ClassroomResponse>> call, @NonNull Response<List<ClassroomResponse>> response) {
-                                Log.d(TAG, "onResponse: " + response.body());
-                                if (dialog.isShowing()) {
-                                    dialog.dismiss();
-                                }
-                                InsertCourseDialogFragment fragment = new InsertCourseDialogFragment(Objects.requireNonNull(response.body()).get(0));
-                                fragment.show(requireFragmentManager(), "insertcourse");
-                            }
-
-                            @Override
-                            public void onFailure(@NonNull Call<List<ClassroomResponse>> call, @NonNull Throwable t) {
-                                Log.e(TAG, "onFailure: ", t);
-                                if (dialog.isShowing()) {
-                                    dialog.dismiss();
-                                }
-                            }
-                        });
+                Log.d(TAG, "onItemSelected: " + facultyText + slotText);
+                Call<List<ClassroomResponse>> finalCourseCall;
+                finalCourseCall = apiClient.searchCourses(null, facultyText, null, slotText);
+                Log.d(TAG, facultyText);
+                Log.d(TAG, slotText.replaceAll("\\+", "%2B"));
+                Log.d(TAG, "onItemSelected: " + finalCourseCall.request());
+                finalCourseCall.enqueue(new Callback<List<ClassroomResponse>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<ClassroomResponse>> call, @NonNull Response<List<ClassroomResponse>> response) {
+                        Log.d(TAG, "onResponse: " + response.body());
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        InsertCourseDialogFragment fragment = new InsertCourseDialogFragment(Objects.requireNonNull(response.body()).get(0));
+                        fragment.show(requireFragmentManager(), "insertcourse");
                     }
-                }
 
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
+                    @Override
+                    public void onFailure(@NonNull Call<List<ClassroomResponse>> call, @NonNull Throwable t) {
+                        Log.e(TAG, "onFailure: ", t);
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            } else {
+                Toast.makeText(requireContext(), "You need to select a faculty first!", Toast.LENGTH_SHORT).show();
             }
         });
+
         viewTimeTable.setOnClickListener(v -> {
             FragmentTransaction transaction = requireFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_up, R.anim.slide_out_up);
