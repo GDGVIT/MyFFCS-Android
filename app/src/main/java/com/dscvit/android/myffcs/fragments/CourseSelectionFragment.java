@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -93,6 +94,7 @@ public class CourseSelectionFragment extends Fragment {
 
         apiClient = retrofit.create(ApiModel.class);
 
+        ImageButton imageButton = view.findViewById(R.id.course_search_imagebutton);
         Button registerCourse = view.findViewById(R.id.register_course_button);
         Button viewTimeTable = view.findViewById(R.id.go_back_button);
         Spinner facultySpinner = view.findViewById(R.id.course_tab_select_spinner);
@@ -113,6 +115,65 @@ public class CourseSelectionFragment extends Fragment {
         facultySpinner.setAdapter(facultyAdapter);
         courseSearch.setAdapter(autocompleteAdapter);
 
+        imageButton.setOnClickListener(v -> {
+            Utils.hideKeyboardFrom(requireContext(), view);
+            ProgressDialog dialog = new ProgressDialog(requireContext());
+            dialog.setMessage("Please wait...");
+            dialog.show();
+            String course = courseSearch.getText().toString();
+            if (Utils.containsDigit(course)) {
+                Call<List<ClassroomResponse>> courseListCall = apiClient.searchCourses(course, null, null, null);
+                courseListCall.enqueue(new Callback<List<ClassroomResponse>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<ClassroomResponse>> call, @NonNull Response<List<ClassroomResponse>> response) {
+                        facultyList.clear();
+
+                        for (ClassroomResponse item : Objects.requireNonNull(response.body())) {
+                            facultyList.add((item.getSlot()) + ": " + item.getFaculty() + " (" + item.getType() + ")");
+                        }
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        Collections.sort(facultyList);
+                        facultyList.add(0, "Select faculty");
+                        facultyAdapter.notifyDataSetChanged();
+                        facultySpinner.setVisibility(View.VISIBLE);
+                        facultyImage.setVisibility(View.VISIBLE);
+                        registerCourse.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<ClassroomResponse>> call, @NonNull Throwable t) {
+                        Log.e(TAG, "onFailure: ", t);
+                    }
+                });
+            } else {
+                Call<List<ClassroomResponse>> courseListCall = apiClient.searchCourses(null, null, course, null);
+                courseListCall.enqueue(new Callback<List<ClassroomResponse>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<ClassroomResponse>> call, @NonNull Response<List<ClassroomResponse>> response) {
+                        facultyList.clear();
+                        for (ClassroomResponse item : Objects.requireNonNull(response.body())) {
+                            facultyList.add((item.getSlot()) + ": " + item.getFaculty() + " (" + item.getType() + ")");
+                        }
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        Collections.sort(facultyList);
+                        facultyList.add(0, "Select faculty");
+                        facultyAdapter.notifyDataSetChanged();
+                        facultySpinner.setVisibility(View.VISIBLE);
+                        facultyImage.setVisibility(View.VISIBLE);
+                        registerCourse.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<ClassroomResponse>> call, @NonNull Throwable t) {
+                        Log.e(TAG, "onFailure: ", t);
+                    }
+                });
+            }
+        });
         courseSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 Utils.hideKeyboardFrom(requireContext(), view);

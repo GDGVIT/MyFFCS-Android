@@ -18,7 +18,7 @@
     <string name="your_timetable">Edit courses</string>
     <string name="api_url">https://myffcs-api.herokuapp.com</string>
     <string name="course_selection_title">Edit your course list</string>
-    <string name="course_search_textbox">Search for courses (ID/name)</string>
+    <string name="course_search_textbox">Search course (ID/name)</string>
     <string name="view_timetable_button_title">View timetable</string>
     <string name="day_field_title">Day</string>
     <string name="time_field_title">Time</string>
