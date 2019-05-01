@@ -10,6 +10,13 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.dscvit.android.myffcs.R;
 import com.dscvit.android.myffcs.adapters.CourseTabRecyclerviewAdapter;
 import com.dscvit.android.myffcs.adapters.CustomSpinnerAdapter;
@@ -19,13 +26,6 @@ import com.dscvit.android.myffcs.models.CourseViewModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import static com.dscvit.android.myffcs.utils.Utils.getSlotDays;
 import static com.dscvit.android.myffcs.utils.Utils.getSlotsFromCourse;
@@ -41,6 +41,7 @@ public class CourseTabFragment extends Fragment {
     private List<ClassroomResponse> savedCourses = new ArrayList<>();
     private ArrayList<String> days = new ArrayList<>(), timings = new ArrayList<>(), venues = new ArrayList<>();
     private CustomSpinnerAdapter customSpinnerAdapter;
+    private Spinner coursesSpinner;
 
     public CourseTabFragment() {
         // Required empty public constructor
@@ -63,14 +64,16 @@ public class CourseTabFragment extends Fragment {
             } else {
                 savedCourses = responseList;
                 displayCourses.clear();
+                displayCourses.add("Select course");
                 for (ClassroomResponse item : responseList) {
                     displayCourses.add(item.getCode() + ": " + item.getTitle() + " (" + item.getType() + ")");
                 }
             }
+            coursesSpinner.setSelection(displayCourses.indexOf("Select course"));
             customSpinnerAdapter.notifyDataSetChanged();
         });
 
-        Spinner coursesSpinner = view.findViewById(R.id.course_tab_select_spinner);
+        coursesSpinner = view.findViewById(R.id.course_tab_select_spinner);
         customSpinnerAdapter = new CustomSpinnerAdapter(requireContext(), displayCourses);
         coursesSpinner.setAdapter(customSpinnerAdapter);
 
