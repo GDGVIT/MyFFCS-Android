@@ -18,12 +18,7 @@ import androidx.fragment.app.Fragment;
 import com.dscvit.android.myffcs.MainActivity;
 import com.dscvit.android.myffcs.R;
 import com.dscvit.android.myffcs.models.ApiModel;
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -34,7 +29,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
@@ -93,30 +87,7 @@ public class SignInFragment extends Fragment {
         TextInputLayout passwordTIL = view.findViewById(R.id.login_password_TIL);
         Button loginButton = view.findViewById(R.id.login_button);
         Button googleButton = view.findViewById(R.id.google_signin_button);
-        Button facebookProxyButton = view.findViewById(R.id.facebook_signin_button_proxy);
         Button skipLoginButton = view.findViewById(R.id.skip_login_button);
-        LoginButton facebookButton = view.findViewById(R.id.facebook_signin_button);
-
-        // init facebook stuff
-        facebookButton.setReadPermissions("email", "public_profile");
-        facebookButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "onSuccess: Facebook login success");
-                handleFacebookAccessToken(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG, "onCancel: ");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.w(TAG, "onError: ", error);
-            }
-        });
-        facebookProxyButton.setOnClickListener(l -> facebookButton.performClick());
 
         // set listeners
         loginButton.setOnClickListener(l -> {
@@ -196,20 +167,4 @@ public class SignInFragment extends Fragment {
                 });
     }
 
-    private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        firebaseAuth.signInWithCredential(credential)
-                .addOnCompleteListener(requireActivity(), task -> {
-                    if (task.isSuccessful()) {
-                        Log.d(TAG, "signInWithCredential:success");
-                        updateUI(firebaseAuth.getCurrentUser());
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        Toast.makeText(requireContext(), "Authentication failed.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 }
