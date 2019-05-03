@@ -27,20 +27,19 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/account_pic"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="100dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="24dp"
             android:layout_marginBottom="8dp"
             android:src="@drawable/ic_person"
             app:civ_border_color="@android:color/white"
             app:civ_border_width="2dp"
             app:layout_constraintBottom_toTopOf="@+id/main_container"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.887"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/textView"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.461" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <FrameLayout
             android:id="@+id/main_container"
